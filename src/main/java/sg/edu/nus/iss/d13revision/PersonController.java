@@ -1,5 +1,7 @@
 package sg.edu.nus.iss.d13revision;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +47,37 @@ public class PersonController {
         return personList;
 
     } 
+
+    @RequestMapping(value="/addPerson", method=RequestMethod.GET)
+    public String showAddPersonPage(Model model) {
+        PersonForm pForm = new PersonForm();
+        model.addAtrribute("personForm", pForm);
+
+        if (fName != null && fName.length() > 0 && lName != null && lName.length() > 0) {
+            Person newPerson = new Person(fName, lName);
+            perSvc.savePerson(newPerson);
+
+            return "redirect:/personList";
+            
+
+        }
+
+        model.addAttribute("errorMessage", errorMessage);
+
+
+        return "addPerson";
+
+    }
+
+    @RequestMapping(value="/addPerson", method =RequestMethod.POST)
+    public String savePerson(Model model, @ModelAttribute("personForm") PersonForm personForm) {
+
+        return "addPerson";
+
+    }
+
+
+
 
 
 
